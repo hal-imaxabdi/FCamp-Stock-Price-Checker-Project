@@ -13,7 +13,7 @@ const runner = require('./test-runner');
 
 const app = express();
 
-// ✅ Security: Content Security Policy
+// ✅ CSP - exactly as freeCodeCamp expects
 app.use(helmet.contentSecurityPolicy({
   directives: {
     scriptSrc: ["'self'"],
@@ -31,23 +31,17 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB error:', err));
 
-// Index route
 app.route('/').get(function(req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
 });
 
-// API routes
 apiRoutes(app);
-
-// Test routes
 fccTestingRoutes(app);
 
-// 404
 app.use(function(req, res, next) {
   res.status(404).type('text').send('Not Found');
 });
 
-// Start server and tests
 const listener = app.listen(process.env.PORT || 3000, function() {
   console.log('Your app is listening on port ' + listener.address().port);
   if (process.env.NODE_ENV === 'test') {
