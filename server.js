@@ -4,7 +4,6 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const helmet = require('helmet');
 const mongoose = require('mongoose');
 
 const apiRoutes = require('./routes/api.js');
@@ -13,13 +12,11 @@ const runner = require('./test-runner');
 
 const app = express();
 
-// ✅ CSP - exactly as freeCodeCamp expects
-app.use(helmet.contentSecurityPolicy({
-  directives: {
-    scriptSrc: ["'self'"],
-    styleSrc: ["'self'"]
-  }
-}));
+// ✅ Set CSP manually - stronger than helmet, survives Cloudflare
+app.use((req, res, next) => {
+  res.setHeader('Content-Security-Policy', "script-src 'self'; style-src 'self'");
+  next();
+});
 
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use(cors({ origin: '*' }));
