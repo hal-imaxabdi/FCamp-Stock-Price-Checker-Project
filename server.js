@@ -14,7 +14,7 @@ const app = express();
 
 // ✅ Set CSP manually - stronger than helmet, survives Cloudflare
 app.use((req, res, next) => {
-  res.setHeader('Content-Security-Policy', "script-src 'self'; style-src 'self'");
+ res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'");
   next();
 });
 
